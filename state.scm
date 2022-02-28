@@ -4,7 +4,6 @@
     update-bindings
     bindings
     genvar
-    reify/1st-var
   )
   (import
     (rnrs)
@@ -35,13 +34,6 @@
     (values
       (state-next-var state)
       (update-next-var (next-var (state-next-var state)) state)
-    )
-  )
-
-  (define (reify/1st-var state)
-    (let
-      [(term (terms-walk* (make-var 0) (bindings state)))]
-      (terms-var-map var->symbol term)
     )
   )
 )

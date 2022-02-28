@@ -58,5 +58,4 @@
       (stream-bind (g1 state) g2)
     )
   )
-
 )

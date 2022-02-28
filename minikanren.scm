@@ -22,6 +22,10 @@
       (kanren bindings)
       bindings-
     )
+    (prefix
+      (kanren terms)
+      terms-
+    )
   )
 
   (define-syntax Zzz
@@ -72,10 +76,17 @@
   (define-syntax run*
     (syntax-rules ()
       ((_ (x x* ...) g g* ...)
-        (map state-reify/1st-var
+        (map reify/1st-var
           (stream-take-all ((fresh (x x* ...) g g* ...) state-empty))
         )
       )
+    )
+  )
+
+  (define (reify/1st-var state)
+    (let
+      [(term (terms-walk* (make-var 0) (state-bindings state)))]
+      (terms-var-map var->symbol term)
     )
   )
 )
