@@ -5,7 +5,6 @@
     run
     run*
     ==
-    ≡
   )
   (import
     (rnrs)
