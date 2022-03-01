@@ -1,7 +1,6 @@
 (library (kanren microkanren)
   (export
     ==
-    ≡
     conj
     disj
     call/fresh
@@ -38,8 +37,6 @@
       )
     )
   )
-
-  (define ≡ ==)
 
   (define (call/fresh f)
     (lambda (state)
