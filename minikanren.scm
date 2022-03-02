@@ -66,7 +66,7 @@
   (define-syntax run
     (syntax-rules ()
       ((_ n (x x* ...) g g* ...)
-        (map state-reify/1st-var
+        (map (reify-1st-n-vars (length '(x x* ...)))
           (stream-take-n n ((fresh (x x* ...) g g* ...) state-empty))
         )
       )
@@ -101,7 +101,7 @@
 
   (define (reify-nth-var n state)
     (let
-      [(term (terms-walk* (make-var 0) (state-bindings state)))]
+      [(term (terms-walk* (make-var n) (state-bindings state)))]
       (terms-var-map var->symbol term)
     )
   )

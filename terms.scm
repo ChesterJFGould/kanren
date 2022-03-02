@@ -74,8 +74,89 @@
            )
          )
         ]
+        [(and
+           (vector? a)
+           (vector? b)
+         )
+         (if (= (vector-length a) (vector-length b))
+           (unify-vectors 0 a b bindings)
+           #f
+         )
+        ]
+        [(and
+           (record? a)
+           (record? b)
+         )
+         (if (eq? (record-rtd a) (record-rtd b))
+           (unify-records (record-rtd a) a b bindings)
+           #f
+         )
+        ]
         [(equal? a b) bindings]
         [else #f]
+      )
+    )
+  )
+
+  (define (unify-vectors i a b bindings)
+    (cond
+      [(>= i (vector-length a)) bindings]
+      [else
+       (let
+         [(bindings^ (unify (vector-ref a i) (vector-ref b i) bindings))]
+         (if bindings^
+           (unify-vectors (+ i 1) a b bindings^)
+           #f
+         )
+       )
+      ]
+    )
+  )
+
+  (define (unify-records rtd a b bindings)
+    (let
+      [(bindings^
+         (if (record-type-parent rtd)
+           (unify-records (record-type-parent rtd) a b bindings)
+           bindings
+         )
+       )
+      ]
+      (cond
+        [bindings
+          (unify-record-fields
+            rtd
+            (vector-length (record-type-field-names rtd))
+            a
+            b
+            bindings
+          )
+        ]
+        [else #f]
+      )
+    )
+  )
+
+  (define (unify-record-fields rtd num-fields a b bindings)
+    (let recur
+      [(i 0)
+       (bindings bindings)
+      ]
+      (cond
+        [(>= i num-fields) bindings]
+        [else
+         (let*
+           [(accessor (record-accessor rtd i))
+            (bindings^ (unify (accessor a) (accessor b) bindings))
+           ]
+           (cond
+             [bindings^
+               (recur (+ i 1) bindings^)
+             ]
+             [else #f]
+           )
+         )
+        ]
       )
     )
   )
