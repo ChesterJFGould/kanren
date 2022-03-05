@@ -3,6 +3,7 @@
     ==
     conj
     disj
+    excl
     call/fresh
   )
   (import
@@ -56,6 +57,12 @@
   (define (conj g1 g2)
     (lambda (state)
       (stream-bind (g1 state) g2)
+    )
+  )
+
+  (define (excl g1 g2)
+    (lambda (state)
+      (stream-xor (g1 state) (g2 state))
     )
   )
 

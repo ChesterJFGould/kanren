@@ -4,6 +4,7 @@
     zero?
     one
     add
+    xor
     bind
     take-all
     take-n
@@ -22,6 +23,19 @@
     (cond
       [(zero? a) b]
       [(procedure? a) (lambda () (add b (a)))]
+      [else (cons (car a) (add b (cdr a)))]
+    )
+  )
+
+  (define (xor a b)
+    (cond
+      [(zero? a) b]
+      [(procedure? a) (lambda () (xor b (a)))]
+      [(and
+         (pair? a)
+         (pair? b)
+       )
+      ]
       [else (cons (car a) (add b (cdr a)))]
     )
   )

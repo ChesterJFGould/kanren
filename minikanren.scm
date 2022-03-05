@@ -1,6 +1,7 @@
 (library (kanren minikanren)
   (export
     conde
+    condx
     fresh
     run
     run*
@@ -44,9 +45,22 @@
     )
   )
 
+  (define-syntax excl+
+    (syntax-rules ()
+      ((_ g) (Zzz g))
+      ((_ g g* ...) (excl (Zzz g) (excl+ g* ...)))
+    )
+  )
+
   (define-syntax conde
     (syntax-rules ()
       ((_ (g g* ...) ...) (disj+ (conj+ g g* ...) ...))
+    )
+  )
+
+  (define-syntax condx
+    (syntax-rules ()
+      ((_ (g g* ...) ...) (excl+ (conj+ g g* ...) ...))
     )
   )
 
