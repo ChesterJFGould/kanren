@@ -65,5 +65,4 @@
       (stream-xor (g1 state) (g2 state))
     )
   )
-
 )

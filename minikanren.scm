@@ -23,6 +23,10 @@
       (kanren bindings)
       bindings-
     )
+    (prefix
+      (kanren terms)
+      terms-
+    )
   )
 
   (define-syntax Zzz
@@ -76,7 +80,7 @@
   (define-syntax run
     (syntax-rules ()
       ((_ n (x x* ...) g g* ...)
-        (map state-reify/1st-var
+        (map (reify-1st-n-vars (length '(x x* ...)))
           (stream-take-n n ((fresh (x x* ...) g g* ...) state-empty))
         )
       )
@@ -86,10 +90,33 @@
   (define-syntax run*
     (syntax-rules ()
       ((_ (x x* ...) g g* ...)
-        (map state-reify/1st-var
+        (map (reify-1st-n-vars (length '(x x* ...)))
           (stream-take-all ((fresh (x x* ...) g g* ...) state-empty))
         )
       )
+    )
+  )
+
+  (define (iota n)
+    (let recur
+      [(i 0)]
+      (cond
+        [(= i n) '()]
+        [else (cons i (recur (+ i 1)))]
+      )
+    )
+  )
+
+  (define (reify-1st-n-vars n)
+    (lambda (state)
+      (map (lambda (n) (reify-nth-var n state)) (iota n))
+    )
+  )
+
+  (define (reify-nth-var n state)
+    (let
+      [(term (terms-walk* (make-var n) (state-bindings state)))]
+      (terms-var-map var->symbol term)
     )
   )
 )
